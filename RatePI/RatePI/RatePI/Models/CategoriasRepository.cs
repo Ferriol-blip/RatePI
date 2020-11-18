@@ -15,9 +15,7 @@ namespace RatePI.Models
             MySqlCommand command = new MySqlCommand(sql, connection);
             List<CategoriaDTO> list = new List<CategoriaDTO>();
             CategoriaDTO obj;
-
-            
-
+       
             try
             {
                 connection.Open();
@@ -39,7 +37,30 @@ namespace RatePI.Models
             {
                 return null;
             }
+        }
 
+        internal void InsertCategorias(int id, string nombre)
+        {
+            MySqlConnection connection = Connect();
+            string sql1 = "INSERT INTO `mydb`.`CATEGORIAS` (`idProyecto_fk`, `Categoria`, `PuntuacionTotal`, `Proyecto`) VALUES ("+ id +", 'creatividad', 0, '"+nombre+"');";
+            string sql2 = "INSERT INTO `mydb`.`CATEGORIAS` (`idProyecto_fk`, `Categoria`, `PuntuacionTotal`, `Proyecto`) VALUES (" + id + ", 'implementacion', 0, '" + nombre + "');";
+            string sql3 = "INSERT INTO `mydb`.`CATEGORIAS` (`idProyecto_fk`, `Categoria`, `PuntuacionTotal`, `Proyecto`) VALUES (" + id + ", 'comunicacion', 0, '" + nombre + "');";
+            MySqlCommand command1 = new MySqlCommand(sql1, connection);
+            MySqlCommand command2 = new MySqlCommand(sql2, connection);
+            MySqlCommand command3 = new MySqlCommand(sql3, connection);
+
+            try
+            {
+                connection.Open();
+                command1.ExecuteNonQuery();
+                command2.ExecuteNonQuery();
+                command3.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch (MySqlException ex)
+            {
+
+            }
         }
 
     }

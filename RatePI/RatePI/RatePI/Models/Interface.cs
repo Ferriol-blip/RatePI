@@ -46,5 +46,28 @@ namespace RatePI.Models
             }
         }
 
+        public static int RetrieveIdByProyect(string proyecto)
+        {
+            MySqlConnection connection = Connect();
+            string sql = "SELECT idProyecto FROM proyectosintegrados WHERE Nombre = '" + proyecto + "';";
+            MySqlCommand command = new MySqlCommand(sql, connection);
+            int id = 0;
+            try
+            {
+                connection.Open();
+                MySqlDataReader re = command.ExecuteReader();
+
+                while (re.Read())
+                {
+                    id = re.GetInt16(0);
+                }
+                return id;
+            }
+            catch (MySqlException ex)
+            {
+                return 0;
+            }
+        } 
+
     }
 }

@@ -9,10 +9,10 @@ USE `mydb` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`PROYECTOSINTEGRADOS` (
   `idProyecto` INT NOT NULL AUTO_INCREMENT,
-  `Nombre` VARCHAR(45) NOT NULL,
+  `Nombre` VARCHAR(45) UNIQUE NOT NULL,
   `Descripcion` VARCHAR(45) NOT NULL,
   `CicloFormativo` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idProyecto`, `Nombre`))
+  PRIMARY KEY (`idProyecto`))
 ENGINE = InnoDB;
 
 
