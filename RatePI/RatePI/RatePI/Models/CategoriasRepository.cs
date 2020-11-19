@@ -59,13 +59,52 @@ namespace RatePI.Models
             }
             catch (MySqlException ex)
             {
-
+                Console.WriteLine("Error");
             }
         }
 
-        internal void UpdateCategorias()
+        public static  void UpdateCategorias(int puntuacionCei, int puntuacionPdi, int puntuacionComunicacion, string proyecto, bool increase)
         {
+            MySqlConnection connection = Connect();
+            string sql1 = "", sql2 = "", sql3 = "";
 
+            if (!increase)
+            {
+                sql1 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal - @puntuacionCei WHERE Proyecto = @proyecto AND Categoria = 'creatividad';";
+                sql2 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal - @puntuacionPdi WHERE Proyecto = @proyecto AND Categoria = 'implementacion';";
+                sql3 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal - @puntuacionComunicacion WHERE Proyecto = @proyecto AND Categoria = 'comunicacion';";
+            }
+
+            if (increase)
+            {
+                sql1 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal + @puntuacionCei WHERE Proyecto = @proyecto AND Categoria = 'creatividad';";
+                sql2 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal + @puntuacionPdi WHERE Proyecto = @proyecto AND Categoria = 'implementacion';";
+                sql3 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal + @puntuacionComunicacion WHERE Proyecto = @proyecto AND Categoria = 'comunicacion';";
+            }
+
+            MySqlCommand command1 = new MySqlCommand(sql1, connection);
+            command1.Parameters.AddWithValue("@puntuacionCei", puntuacionCei);
+            command1.Parameters.AddWithValue("@proyecto", proyecto);
+            MySqlCommand command2 = new MySqlCommand(sql2, connection);
+            command2.Parameters.AddWithValue("@puntuacionPdi", puntuacionPdi);
+            command2.Parameters.AddWithValue("@proyecto", proyecto);
+            MySqlCommand command3 = new MySqlCommand(sql3, connection);
+            command3.Parameters.AddWithValue("@puntuacionComunicacion", puntuacionComunicacion);
+            command3.Parameters.AddWithValue("@proyecto", proyecto);
+
+
+            try
+            {
+                connection.Open();
+                command1.ExecuteNonQuery();
+                command2.ExecuteNonQuery();
+                command3.ExecuteNonQuery();
+                connection.Close();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Error");
+            }
         }
 
     }
