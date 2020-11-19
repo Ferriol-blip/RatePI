@@ -23,8 +23,10 @@ namespace RatePI.Controllers
         }
 
         // POST: api/Asistentes
-        public void Post([FromBody]string value)
+        public void Post([FromBody] Asistente asist)
         {
+            AsistentesRepository re = new AsistentesRepository();
+            re.Save(asist);
         }
 
         // PUT: api/Asistentes/5

@@ -8,6 +8,38 @@ namespace RatePI.Models
 {
     public class AsistentesRepository : Interface
     {
+        internal void Save(Asistente asist)
+        {
+            bool increase = true;
+            int idProyecto = RetrieveIdByProyect(asist.Proyecto);
+
+            MySqlConnection connection = Connect();
+            string sql = "INSERT INTO `mydb`.`ASISTENTES` (`Email`, `NombreProyect`, `PuntuacionCei`, `PuntuacionPdi`, `PuntuacionComunicacion`, `idProyecto_fk`)" +
+                " VALUES (@email, @proyecto, @PuntuacionCei, @PuntuacionPdi, @PuntuacionComunicacion, "+ idProyecto+"); ";
+            MySqlCommand command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@email", asist.Email);
+            command.Parameters.AddWithValue("@proyecto", asist.Proyecto);
+            command.Parameters.AddWithValue("@PuntuacionCei", asist.PuntuacionCei);
+            command.Parameters.AddWithValue("@PuntuacionPdi", asist.PuntuacionPdi);
+            command.Parameters.AddWithValue("@PuntuacionComunicacion", asist.PuntuacionComunicacion);
+
+            try
+            {
+                connection.Open();
+                command.ExecuteNonQuery(); //insercion del asistente y su puntuacion
+                connection.Close();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Error");
+            }
+
+            CategoriasRepository.UpdateCategorias(
+            asist.PuntuacionCei, asist.PuntuacionPdi, asist.PuntuacionComunicacion, asist.Proyecto, increase); //Update para sumar la votacion
+        }
+
+
+
         internal void DeleteByEmail(string email)
         {
             //obtener nombre y puntuacion del asistente para erealizar el update donde se almacena el total de las votaciones.
