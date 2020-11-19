@@ -25,16 +25,16 @@ namespace RatePI.Models
 
     public class CategoriaDTO
     {
-        public CategoriaDTO(string proyecto, string cat, double puntuacionMedia)
+        public CategoriaDTO(string proyecto, string cat, double puntuacion)
         {
             Proyecto = proyecto;
             Cat = cat;
-            PuntuacionMedia = puntuacionMedia;
+            Puntuacion = puntuacion;
         }
 
         public string Proyecto { get; set; }
         public string Cat { get; set; }
-        public double PuntuacionMedia { get; set; }
+        public double Puntuacion { get; set; }
     }
 
 }

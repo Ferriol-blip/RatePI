@@ -11,7 +11,8 @@ namespace RatePI.Models
         internal void Save(Asistente asist)
         {
             bool increase = true;
-            int idProyecto = RetrieveIdByProyect(asist.Proyecto);
+            //Este metodo también sirve como comprobación, si no existe el proyecto no obtendrá el id y la inserción no funcionara.
+            int idProyecto =  ProyectosRepository.RetrieveIdByProyect(asist.Proyecto); 
 
             MySqlConnection connection = Connect();
             string sql = "INSERT INTO `mydb`.`ASISTENTES` (`Email`, `NombreProyect`, `PuntuacionCei`, `PuntuacionPdi`, `PuntuacionComunicacion`, `idProyecto_fk`)" +
@@ -34,6 +35,7 @@ namespace RatePI.Models
                 Console.WriteLine("Error");
             }
 
+            //Si el nombre del proyecto no existe, tampoco funcionara el update ya que filtra por nombre del poryecto.
             CategoriasRepository.UpdateCategorias(
             asist.PuntuacionCei, asist.PuntuacionPdi, asist.PuntuacionComunicacion, asist.Proyecto, increase); //Update para sumar la votacion
         }
@@ -85,6 +87,29 @@ namespace RatePI.Models
             catch (MySqlException ex)
             {
                 Console.WriteLine("Error");
+            }
+        }
+
+        public static int VotacionesPorProyecto(string proyecto)
+        {
+            MySqlConnection connection = Connect();
+            string sql = "SELECT COUNT(NombreProyect) FROM asistentes WHERE asistentes.NombreProyect = '" + proyecto + "';";
+            MySqlCommand command = new MySqlCommand(sql, connection);
+            int numVotaciones = 0;
+            try
+            {
+                connection.Open();
+                MySqlDataReader re = command.ExecuteReader();
+
+                while (re.Read())
+                {
+                    numVotaciones = re.GetInt16(0);
+                }
+                return numVotaciones;
+            }
+            catch (MySqlException ex)
+            {
+                return 0;
             }
         }
     }

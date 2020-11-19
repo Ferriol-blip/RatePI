@@ -21,53 +21,6 @@ namespace RatePI.Models
 
             MySqlConnection con = new MySqlConnection(conString);
             return con;
-        }
-
-        public static int VotacionesPorProyecto(string proyecto)
-        {
-            MySqlConnection connection = Connect();
-            string sql = "SELECT COUNT(NombreProyect) FROM asistentes WHERE asistentes.NombreProyect = '" + proyecto + "';";
-            MySqlCommand command = new MySqlCommand(sql, connection);
-            int numVotaciones = 0;
-            try
-            {
-                connection.Open();
-                MySqlDataReader re = command.ExecuteReader();
-
-                while (re.Read())
-                {
-                    numVotaciones = re.GetInt16(0);
-                }
-                return numVotaciones;
-            }
-            catch (MySqlException ex)
-            {
-                return 0;
-            }
-        }
-
-        public static int RetrieveIdByProyect(string proyecto)
-        {
-            MySqlConnection connection = Connect();
-            string sql = "SELECT idProyecto FROM proyectosintegrados WHERE Nombre = '" + proyecto + "';";
-            MySqlCommand command = new MySqlCommand(sql, connection);
-            int id = 0;
-            try
-            {
-                connection.Open();
-                MySqlDataReader re = command.ExecuteReader();
-
-                while (re.Read())
-                {
-                    id = re.GetInt16(0);
-                }
-                return id;
-            }
-            catch (MySqlException ex)
-            {
-                return 0;
-            }
         } 
-
     }
 }

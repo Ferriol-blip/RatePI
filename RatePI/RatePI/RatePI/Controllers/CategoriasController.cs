@@ -24,6 +24,14 @@ namespace RatePI.Controllers
             return list;
         }
 
+        // GET: api/Categorias?
+        public List<CategoriaDTO> GetByProyecto(string proyecto)
+        {
+            CategoriasRepository re = new CategoriasRepository();
+            List<CategoriaDTO> list = re.RetrieveByProyecto(proyecto);
+            return list;
+        }
+
         // POST: api/Categorias
         public void Post([FromBody]string value)
         {

@@ -24,10 +24,36 @@ namespace RatePI.Models
                 {
                     string proyecto = re.GetString(0);
                     int puntuacion = re.GetInt16(2);
-                    int votaciones = VotacionesPorProyecto(proyecto);
+                    int votaciones = AsistentesRepository.VotacionesPorProyecto(proyecto);
                     double media = puntuacion / votaciones;
 
                     obj = new CategoriaDTO(re.GetString(0), re.GetString(1), media);
+                    list.Add(obj);
+                }
+                connection.Close();
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                return null;
+            }
+        }
+
+        internal List<CategoriaDTO> RetrieveByProyecto(string proyecto)
+        {
+            MySqlConnection connection = Connect();
+            string sql = "SELECT categorias.Proyecto, categorias.Categoria, categorias.PuntuacionTotal from categorias WHERE categorias.proyecto = '" + proyecto + "';";
+            MySqlCommand command = new MySqlCommand(sql, connection);
+            List<CategoriaDTO> list = new List<CategoriaDTO>();
+            CategoriaDTO obj;
+
+            try
+            {
+                connection.Open();
+                MySqlDataReader re = command.ExecuteReader();
+                while (re.Read())
+                {
+                    obj = new CategoriaDTO(re.GetString(0), re.GetString(1), re.GetInt16(2));
                     list.Add(obj);
                 }
                 connection.Close();

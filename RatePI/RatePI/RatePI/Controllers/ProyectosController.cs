@@ -24,6 +24,14 @@ namespace RatePI.Controllers
             return list;
         }
 
+        // GET: api/Proyectos?ciclo=ciclo&categoria=categoria&puntuacion=puntuacion
+        public List<ProyectoDTO> GetDTO(string ciclo, string categoria, int puntuacion)
+        {
+            ProyectosRepository re = new ProyectosRepository();
+            List<ProyectoDTO> list = re.RetrieveByCicloAndPunt(ciclo, categoria, puntuacion);
+            return list;
+        }
+
         // POST: api/Proyectos
         public void Post([FromBody]Proyecto pro)
         {

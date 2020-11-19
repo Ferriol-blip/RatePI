@@ -34,6 +34,37 @@ namespace RatePI.Models
             }
         }
 
+        internal List<ProyectoDTO> RetrieveByCicloAndPunt(string ciclo, string categoria, int puntuacion)
+        {
+            MySqlConnection connection = Connect();
+            string sql = "SELECT `proyectosintegrados`.`Nombre`, `proyectosintegrados`.`Descripcion`, `proyectosintegrados`.`CicloFormativo` " +
+            "FROM `proyectosintegrados`, `categorias` " +
+            "WHERE `proyectosintegrados`.`CicloFormativo` = @ciclo AND `categorias`.`Categoria` = @categoria AND `categorias`.`PuntuacionTotal` = @puntuacion;";
+            MySqlCommand command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@ciclo", ciclo);
+            command.Parameters.AddWithValue("@categoria", categoria);
+            command.Parameters.AddWithValue("@puntuacion", puntuacion);
+            List<ProyectoDTO> list = new List<ProyectoDTO>();
+            ProyectoDTO obj;
+            try
+            {
+                connection.Open();
+                MySqlDataReader re = command.ExecuteReader();
+                while (re.Read())
+                {
+                    obj = new ProyectoDTO(re.GetString(0), re.GetString(1), re.GetString(2));
+                    list.Add(obj);
+                }
+                connection.Close();
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                return null;
+            }
+        }
+
+
         internal void Save(Proyecto pro)
         {
             MySqlConnection connection = Connect();
@@ -59,5 +90,29 @@ namespace RatePI.Models
             reCat.InsertCategorias(id, pro.Nombre);
         }
 
+        public static int RetrieveIdByProyect(string proyecto)
+        {
+            MySqlConnection connection = Connect();
+            string sql = "SELECT idProyecto FROM proyectosintegrados WHERE Nombre = '" + proyecto + "';";
+            MySqlCommand command = new MySqlCommand(sql, connection);
+            int id = 0;
+            try
+            {
+                connection.Open();
+                MySqlDataReader re = command.ExecuteReader();
+
+                while (re.Read())
+                {
+                    id = re.GetInt16(0);
+                }
+                return id;
+            }
+            catch (MySqlException ex)
+            {
+                return 0;
+            }
+        }
+
     }
+
 }
