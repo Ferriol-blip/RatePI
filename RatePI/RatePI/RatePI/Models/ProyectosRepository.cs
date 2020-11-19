@@ -34,15 +34,14 @@ namespace RatePI.Models
             }
         }
 
-        internal List<ProyectoDTO> RetrieveByCicloAndPunt(string ciclo, string categoria, int puntuacion)
+        internal List<ProyectoDTO> RetrieveByCicloAndPunt(string ciclo, int puntuacion)
         {
             MySqlConnection connection = Connect();
-            string sql = "SELECT `proyectosintegrados`.`Nombre`, `proyectosintegrados`.`Descripcion`, `proyectosintegrados`.`CicloFormativo` " +
-            "FROM `proyectosintegrados`, `categorias` " +
-            "WHERE `proyectosintegrados`.`CicloFormativo` = @ciclo AND `categorias`.`Categoria` = @categoria AND `categorias`.`PuntuacionTotal` = @puntuacion;";
+            string sql = "SELECT `proyectosintegrados`.`Nombre`, `proyectosintegrados`.`Descripcion`, `proyectosintegrados`.`CicloFormativo`, `categorias`.`Categoria`, `categorias`.`PuntuacionTotal` " +
+                "FROM `proyectosintegrados` LEFT JOIN `categorias` ON `categorias`.`idProyecto_fk` = `proyectosintegrados`.`idProyecto` " +
+                "WHERE `proyectosintegrados`.`CicloFormativo` = @ciclo AND `categorias`.`PuntuacionTotal` = @puntuacion; ";
             MySqlCommand command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@ciclo", ciclo);
-            command.Parameters.AddWithValue("@categoria", categoria);
             command.Parameters.AddWithValue("@puntuacion", puntuacion);
             List<ProyectoDTO> list = new List<ProyectoDTO>();
             ProyectoDTO obj;
@@ -52,7 +51,7 @@ namespace RatePI.Models
                 MySqlDataReader re = command.ExecuteReader();
                 while (re.Read())
                 {
-                    obj = new ProyectoDTO(re.GetString(0), re.GetString(1), re.GetString(2));
+                    obj = new ProyectoDTO(re.GetString(0), re.GetString(1), re.GetString(2), re.GetString(3), re.GetInt16(4));
                     list.Add(obj);
                 }
                 connection.Close();
@@ -67,6 +66,7 @@ namespace RatePI.Models
 
         internal void Save(Proyecto pro)
         {
+            int check = 0;
             MySqlConnection connection = Connect();
             //Se isnerta un proyecto
             string sql = "INSERT INTO `mydb`.`PROYECTOSINTEGRADOS` (`Nombre`, `Descripcion`, `CicloFormativo`) VALUES(@nombre, @desc, @ciclo)";           
@@ -77,7 +77,7 @@ namespace RatePI.Models
             try
             {
                 connection.Open();
-                command.ExecuteNonQuery();
+                check = command.ExecuteNonQuery();
                 connection.Close();
             }
             catch (MySqlException ex)
@@ -85,9 +85,13 @@ namespace RatePI.Models
                 
             }
             //Se inserta las categorias asociadas a cada proyecto
-            int id = RetrieveIdByProyect(pro.Nombre); //optenemos el id del proyecto que se acaba de insertar
-            CategoriasRepository reCat = new CategoriasRepository();
-            reCat.InsertCategorias(id, pro.Nombre);
+            //si check tiene un valor superior a 0 la inserción del executenonquery se ha realizado, por lo que hará la inserción de las categorias relacionadas.
+            if (check > 0)
+            {
+                int id = RetrieveIdByProyect(pro.Nombre); //optenemos el id del proyecto que se acaba de insertar
+                CategoriasRepository reCat = new CategoriasRepository();
+                reCat.InsertCategorias(id, pro.Nombre);
+            }
         }
 
         public static int RetrieveIdByProyect(string proyecto)

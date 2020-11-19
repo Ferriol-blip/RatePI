@@ -23,15 +23,19 @@ namespace RatePI.Models
 
     public class ProyectoDTO
     {
-        public ProyectoDTO(string nombre, string descripcion, string cicloFormativo)
+        public ProyectoDTO(string nombre, string descripcion, string cicloFormativo, string cat, int puntuacion)
         {
             Nombre = nombre;
             Descripcion = descripcion;
             CicloFormativo = cicloFormativo;
+            Cat = cat;
+            Puntuacion = puntuacion;
         }
 
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public string CicloFormativo { get; set; }
+        public string Cat { get; set; }
+        public int Puntuacion { get; set; }
     }
 }

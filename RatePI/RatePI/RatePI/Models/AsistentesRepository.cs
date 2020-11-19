@@ -11,6 +11,7 @@ namespace RatePI.Models
         internal void Save(Asistente asist)
         {
             bool increase = true;
+            int check = 0;
             //Este metodo también sirve como comprobación, si no existe el proyecto no obtendrá el id y la inserción no funcionara.
             int idProyecto =  ProyectosRepository.RetrieveIdByProyect(asist.Proyecto); 
 
@@ -27,7 +28,7 @@ namespace RatePI.Models
             try
             {
                 connection.Open();
-                command.ExecuteNonQuery(); //insercion del asistente y su puntuacion
+                check = command.ExecuteNonQuery(); //insercion del asistente y su puntuacion
                 connection.Close();
             }
             catch (MySqlException ex)
@@ -35,9 +36,12 @@ namespace RatePI.Models
                 Console.WriteLine("Error");
             }
 
-            //Si el nombre del proyecto no existe, tampoco funcionara el update ya que filtra por nombre del poryecto.
-            CategoriasRepository.UpdateCategorias(
-            asist.PuntuacionCei, asist.PuntuacionPdi, asist.PuntuacionComunicacion, asist.Proyecto, increase); //Update para sumar la votacion
+            if (check > 0) //Solo ocurre si se realiza el insert
+            {
+                //Si el nombre del proyecto no existe, tampoco funcionara el update ya que filtra por nombre del poryecto.
+                CategoriasRepository.UpdateCategorias(
+                asist.PuntuacionCei, asist.PuntuacionPdi, asist.PuntuacionComunicacion, asist.Proyecto, increase); //Update para sumar la votacion
+            }
         }
 
 

@@ -25,7 +25,8 @@ namespace RatePI.Models
                     string proyecto = re.GetString(0);
                     int puntuacion = re.GetInt16(2);
                     int votaciones = AsistentesRepository.VotacionesPorProyecto(proyecto);
-                    double media = puntuacion / votaciones;
+                    double media = 0;
+                    media = puntuacion != 0 ? media = puntuacion / votaciones : media;
 
                     obj = new CategoriaDTO(re.GetString(0), re.GetString(1), media);
                     list.Add(obj);
