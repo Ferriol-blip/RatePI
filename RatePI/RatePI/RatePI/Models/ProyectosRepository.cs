@@ -57,7 +57,6 @@ namespace RatePI.Models
             int id = RetrieveIdByProyect(pro.Nombre); //optenemos el id del proyecto que se acaba de insertar
             CategoriasRepository reCat = new CategoriasRepository();
             reCat.InsertCategorias(id, pro.Nombre);
-
         }
 
     }

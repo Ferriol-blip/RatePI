@@ -8,5 +8,11 @@ namespace RatePI.Models
 {
     public class AsistentesRepository : Interface
     {
+        internal void DeleteByEmail(string email)
+        {
+            MySqlConnection connection = Connect();
+            
+        }
+
     }
 }

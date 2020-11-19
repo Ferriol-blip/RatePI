@@ -63,5 +63,10 @@ namespace RatePI.Models
             }
         }
 
+        internal void UpdateCategorias()
+        {
+
+        }
+
     }
 }

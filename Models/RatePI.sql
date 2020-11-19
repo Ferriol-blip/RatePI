@@ -22,7 +22,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`INTEGRANTES` (
   `idIntegrante` INT NOT NULL AUTO_INCREMENT,
   `Nombre` VARCHAR(45) NOT NULL,
-  `Email` VARCHAR(45) NOT NULL,
+  `Email` VARCHAR(45) UNIQUE NOT NULL,
   `idProyecto_fk` INT NOT NULL,
   `Proyecto` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idIntegrante`),
@@ -39,7 +39,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`ASISTENTES` (
   `idAsistente` INT NOT NULL AUTO_INCREMENT,
-  `Email` VARCHAR(45) NOT NULL,
+  `Email` VARCHAR(45) UNIQUE NOT NULL,
   `NombreProyect` VARCHAR(45) NOT NULL,
   `PuntuacionCei` INT(1) NOT NULL,
   `PuntuacionPdi` INT(1) NOT NULL,
