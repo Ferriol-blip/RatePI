@@ -8,13 +8,13 @@ namespace RatePI.Models
 {
     public class CategoriasRepository : Interface
     {
-        internal List<CategoriaDTO> RetrieveByCategoria(string categoria)
+        internal List<CategoriaMedia> RetrieveByCategoria(string categoria)
         {
             MySqlConnection connection = Connect();
             string sql = "SELECT categorias.Proyecto, categorias.Categoria, categorias.PuntuacionTotal from categorias WHERE categorias.categoria = '"+categoria+"';";
             MySqlCommand command = new MySqlCommand(sql, connection);
-            List<CategoriaDTO> list = new List<CategoriaDTO>();
-            CategoriaDTO obj;
+            List<CategoriaMedia> list = new List<CategoriaMedia>();
+            CategoriaMedia obj;
        
             try
             {
@@ -24,11 +24,11 @@ namespace RatePI.Models
                 {
                     string proyecto = re.GetString(0);
                     int puntuacion = re.GetInt16(2);
-                    int votaciones = AsistentesRepository.VotacionesPorProyecto(proyecto);
+                    int votaciones = AsistentesRepository.NumVotaciones(proyecto, categoria);
                     double media = 0;
-                    media = puntuacion != 0 ? media = puntuacion / votaciones : media;
+                    media = puntuacion != 0 && votaciones != 0 ? media = puntuacion / votaciones : media;
 
-                    obj = new CategoriaDTO(re.GetString(0), re.GetString(1), media);
+                    obj = new CategoriaMedia(re.GetString(0), re.GetString(1), media);
                     list.Add(obj);
                 }
                 connection.Close();
@@ -90,42 +90,29 @@ namespace RatePI.Models
             }
         }
 
-        public static  void UpdateCategorias(int puntuacionCei, int puntuacionPdi, int puntuacionComunicacion, string proyecto, bool increase)
+        public static  void UpdateCategorias(string categoria, int puntuacion, string proyecto, bool increase)
         {
             MySqlConnection connection = Connect();
-            string sql1 = "", sql2 = "", sql3 = "";
+            string sql = "";
 
             if (!increase)
             {
-                sql1 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal - @puntuacionCei WHERE Proyecto = @proyecto AND Categoria = 'creatividad';";
-                sql2 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal - @puntuacionPdi WHERE Proyecto = @proyecto AND Categoria = 'implementacion';";
-                sql3 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal - @puntuacionComunicacion WHERE Proyecto = @proyecto AND Categoria = 'comunicacion';";
+                sql = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal - @puntuacion WHERE Proyecto = @proyecto AND Categoria = @categoria;";
             }
 
             if (increase)
             {
-                sql1 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal + @puntuacionCei WHERE Proyecto = @proyecto AND Categoria = 'creatividad';";
-                sql2 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal + @puntuacionPdi WHERE Proyecto = @proyecto AND Categoria = 'implementacion';";
-                sql3 = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal + @puntuacionComunicacion WHERE Proyecto = @proyecto AND Categoria = 'comunicacion';";
+                sql = "UPDATE categorias SET PuntuacionTotal = PuntuacionTotal + @puntuacion WHERE Proyecto = @proyecto AND Categoria = @categoria;";
             }
 
-            MySqlCommand command1 = new MySqlCommand(sql1, connection);
-            command1.Parameters.AddWithValue("@puntuacionCei", puntuacionCei);
-            command1.Parameters.AddWithValue("@proyecto", proyecto);
-            MySqlCommand command2 = new MySqlCommand(sql2, connection);
-            command2.Parameters.AddWithValue("@puntuacionPdi", puntuacionPdi);
-            command2.Parameters.AddWithValue("@proyecto", proyecto);
-            MySqlCommand command3 = new MySqlCommand(sql3, connection);
-            command3.Parameters.AddWithValue("@puntuacionComunicacion", puntuacionComunicacion);
-            command3.Parameters.AddWithValue("@proyecto", proyecto);
-
-
+            MySqlCommand command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@puntuacion", puntuacion);
+            command.Parameters.AddWithValue("@proyecto", proyecto);
+            command.Parameters.AddWithValue("@categoria", categoria);
             try
             {
                 connection.Open();
-                command1.ExecuteNonQuery();
-                command2.ExecuteNonQuery();
-                command3.ExecuteNonQuery();
+                command.ExecuteNonQuery();
                 connection.Close();
             }
             catch (MySqlException ex)

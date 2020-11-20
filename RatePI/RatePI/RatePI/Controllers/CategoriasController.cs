@@ -17,10 +17,10 @@ namespace RatePI.Controllers
         }
 
         // GET: api/Categorias/5
-        public List<CategoriaDTO> Get(string categoria)
+        public List<CategoriaMedia> Get(string categoria)
         {
             CategoriasRepository re = new CategoriasRepository();
-            List<CategoriaDTO> list = re.RetrieveByCategoria(categoria);
+            List<CategoriaMedia> list = re.RetrieveByCategoria(categoria);
             return list;
         }
 
