@@ -22,9 +22,17 @@ Backend de la aplicación RatePI, trata de administrar las votaciones de los dis
 1.  Obtener un listado de proyectos, filtrado por su ciclo y puntuación.
   
 1.  Eliminar una puntuación de un asistente.
-    *  Se elimina el registro del asistente y sus puntuaciones, además actualiza, restando en este caso de la puntuación total del pi. (Se ha usado el delete del controler, otra opción sería usar un get y realizar un update)
+    *  Se elimina el registro del asistente y sus puntuaciones, además actualiza, restando en este caso de la puntuación total del pi. (Se ha usado el delete del controler, otra opción sería usar un get y realizar un update sin necesidad de eliminar el asistente)
  
 1.  Obtener un listado de proyectos filtrado por su nombre, obteniendo tambíen su puntuación total.
   
 1.  Insertar un asistente nuevo.
     *  Inserta el nombre e email de asistente, proyecto, puntuacion y a que categoria va dirigido, que actualiza, sumandose a la puntuación total del proyecto seleccionado.
+	
+    
+**:zap: Observaciones**
+
+Hasta la rama AE3 entendía que un asistente votaba a un proyecto en las tres categorias y lo tenía terminado pero al repasarlo entendí que un usuario puede votar a un unico poryecto por categoria, a partir dela rama AE4 esta todo modificado para este fin.
+
+
+**Pequeño video de uso con postman:**   https://youtu.be/WMpoILgr-KU
