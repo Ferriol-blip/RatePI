@@ -28,11 +28,3 @@ Backend de la aplicación RatePI, trata de administrar las votaciones de los dis
   
 1.  Insertar un asistente nuevo.
     *  Inserta el nombre e email de asistente, proyecto, puntuacion y a que categoria va dirigido, que actualiza, sumandose a la puntuación total del proyecto seleccionado.
-	
-    
-**:zap: Observaciones**
-
-Hasta la rama AE3 entendía que un asistente votaba a un proyecto en las tres categorias y lo tenía terminado pero al repasarlo entendí que un usuario puede votar a un unico poryecto por categoria, a partir dela rama AE4 esta todo modificado para este fin.
-
-
-**Pequeño video de uso con postman:**   https://youtu.be/WMpoILgr-KU
