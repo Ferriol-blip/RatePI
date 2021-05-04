@@ -30,4 +30,4 @@ Backend de la aplicación RatePI, trata de administrar las votaciones de los dis
     *  Inserta el nombre e email de asistente, proyecto, puntuacion y a que categoria va dirigido, que actualiza, sumandose a la puntuación total del proyecto seleccionado.
 
 
-**Copyright 2021 by  Pablo Ferriol**
+:suspect:**Copyright 2021 by  Pablo Ferriol**
